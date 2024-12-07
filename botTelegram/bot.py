@@ -52,8 +52,9 @@ async def start(update: Update, context: CallbackContext) -> int:
     user_id = user.id
     first_name = user.first_name
 
-    if acharUser(user_id, captura_som):
+    if acharUser(user_id) != 0:
         await update.message.reply_text("Notei que você já contribuiu antes! Bem-vindo!")
+        captura_som["id_user_object"] = acharUser(user_id) 
     else:
         await update.message.reply_text(
             "Opa! Você é novo. Fiz um cadastro automático com seu ID e Nome de usuário!"

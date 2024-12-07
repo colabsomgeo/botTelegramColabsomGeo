@@ -46,20 +46,20 @@ def salvarUser(telegram_id, nome):
     else:
         print("Falha ao conectar à coleção.")
 
-def acharUser(telegram_id, captura_som):
+def acharUser(telegram_id):
     collection = connection(uri, db, user_colletion)
     if collection is not None:
         try:
             documento = collection.find_one({"telegram_id": telegram_id})
           
-            
+    
             if documento:
                 print(f"Usuário encontrado: {documento}")
-                captura_som["id_user_object"] = documento.get("_id")
-                return True
+                return documento.get("_id")
+             
             else:
                 print("Usuário não encontrado.")
-                return False
+                return 0
         except Exception as e:
             print(f"Erro ao buscar o documento: {e}")
     else:
