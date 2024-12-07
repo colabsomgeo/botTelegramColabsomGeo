@@ -51,15 +51,12 @@ def acharUser(telegram_id):
     if collection is not None:
         try:
             documento = collection.find_one({"telegram_id": telegram_id})
-          
-    
             if documento:
                 print(f"Usuário encontrado: {documento}")
                 return documento.get("_id")
-             
             else:
                 print("Usuário não encontrado.")
-                return 0
+                return None
         except Exception as e:
             print(f"Erro ao buscar o documento: {e}")
     else:
