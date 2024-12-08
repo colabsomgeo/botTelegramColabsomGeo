@@ -22,9 +22,10 @@ def main():
         fallbacks=[CommandHandler("cancel", cancel)],
     )
 
+    print("IP público:", get_public_ip())
     application.add_handler(conv_handler)
     application.run_polling()
     
 if __name__ == "__main__":
     main()
-    print("IP público:", get_public_ip())
+   
