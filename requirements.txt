@@ -4,4 +4,3 @@ librosa
 numpy
 pymongo
 scipy
-requests
