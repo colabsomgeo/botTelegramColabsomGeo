@@ -1,15 +1,16 @@
+
+
 import numpy as np
 from scipy.signal import bilinear, lfilter
-import librosa
+import librosa 
 
+from speechbrain.pretrained import EncoderClassifier
+model = EncoderClassifier.from_hparams(
+  "speechbrain/urbansound8k_ecapa"
+)
 
 def aplicar_a_weighting(sr, y):
-    """
-    Aplica o filtro A-Weighting ao sinal de áudio.
-    :param sr: Taxa de amostragem (sample rate)
-    :param y: Sinal de áudio (numpy array)
-    :return: Sinal filtrado com A-Weighting
-    """
+   
     # Frequências e constantes para A-Weighting
     f1, f2, f3, f4 = 20.598997, 107.65265, 737.86223, 12194.217
 
@@ -65,3 +66,14 @@ def extrair_informacoes_audio(caminho_arquivo):
         "max_dBA": float(max_dBA),
         "rms_loudness": float(rms_media)
     }
+
+def classificar_audio(caminho_arquivo):
+    # Executa a inferência com o classificador
+    output = model.classify_file(caminho_arquivo)
+    
+    # Retorna a classe predita e a pontuação (opcional)
+    predicted_class = output[3]  # index 3 contém o nome da classe
+    score = output[2].item()     # index 2 contém o score de confiança (tensor)
+    
+    return predicted_class[0]
+

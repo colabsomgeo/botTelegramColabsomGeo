@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext, ConversationHandler
 from botTelegram.bot import handle_location, handle_audio, cancel, start, LOCATION, AUDIO
 
-TOKEN = '7621244735:AAHYyFa1QI99bSLDl9jpwkB2L0QX10kQzwY'
+TOKEN = '7621244735:AAEJ86WLh_xlXwaraNtBFanypEJVRV6wBgQ'
 
 
 def get_public_ip():

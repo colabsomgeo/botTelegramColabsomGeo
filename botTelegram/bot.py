@@ -1,12 +1,12 @@
 from telegram import Update
+import torchaudio
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackContext, ConversationHandler
 import nest_asyncio
 nest_asyncio.apply()
 from mongDB.mongoDB import salvarUser,acharUser,salvarInfoAudio
 from datetime import datetime
 import os
-from processamento.processamento import extrair_informacoes_audio
-
+from processamento.processamento import extrair_informacoes_audio, classificar_audio
 captura_som ={}
 LOCATION, AUDIO = range(2)
 
@@ -31,13 +31,23 @@ async def handle_audio(update: Update, context: CallbackContext) -> int:
     audio_file = update.message.voice
     if audio_file:
         audio_file = await audio_file.get_file()
-        file_path = await audio_file.download_to_drive(custom_path='audio.ogg')
+        ogg_path = 'audio.ogg'
+        wav_path='audio.wav'
+        file_path = await audio_file.download_to_drive(custom_path=ogg_path)
+
+        waveform, sample_rate = torchaudio.load(ogg_path)
+
+        torchaudio.save(wav_path, waveform, sample_rate)
 
         # Simulação de processamento do áudio
         captura_som.update(extrair_informacoes_audio(file_path))
+        print(file_path)
+        captura_som['categoria'] = classificar_audio(wav_path)
+
         print(captura_som)
         salvarInfoAudio(captura_som)
         os.remove(file_path)  # Remover arquivo temporário
+        os.remove(wav_path)
         captura_som.clear()
 
         await update.message.reply_text("Áudio processado! Dados salvos no banco de dados.")
