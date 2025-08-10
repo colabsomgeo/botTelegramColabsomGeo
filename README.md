@@ -62,6 +62,11 @@ python main.py
 
 Sinta-se à vontade para contribuir! Faça um fork, crie uma branch com sua feature (`git checkout -b feature/nova-feature`) e depois envie um pull request.
 
+## Autores
+
+   * [Sergio Augusto Coelho Bezerra](sergio.bezerra@ifam.edu.br) - Professor Orientador
+   * [Fani Tamires de Souza Batista](https://github.com/fanitsouza) - Aluno Desenvolvedor 
+   * [Sannyer Cadoso Carvalho Nery](https://github.com/Sannyer3232) - Aluno Desenvolvedor
 ## 📄 Licença
 
 Este projeto está sob a licença [MIT](LICENSE).
