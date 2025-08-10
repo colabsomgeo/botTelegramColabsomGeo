@@ -1,13 +1,14 @@
 from pymongo import MongoClient, errors
 
 #uri = 'mongodb+srv://carvalhosannyer:hM5H1hdxMZ7x9mTL@cluster0.feb5b.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+
 uri = "mongodb://localhost:27017/"
 
 
 db = 'colabSomGeo'
 user_colletion = 'user'
 som_colletion = 'captura_som'
-captura_som_colletion = "captura_som"
+
 
 
 def connection(uri, database, collection):
@@ -50,9 +51,13 @@ def salvarUser(telegram_id, nome):
         print("Falha ao conectar à coleção.")
 
 def acharUser(telegram_id):
+
     collection = connection(uri, db, user_colletion)
+
     if collection is not None:
+
         try:
+            
             documento = collection.find_one({"telegram_id": telegram_id})
             if documento:
                 print(f"Usuário encontrado: {documento}")

@@ -3,17 +3,19 @@
 import numpy as np
 from scipy.signal import bilinear, lfilter
 import librosa 
-
 from speechbrain.pretrained import EncoderClassifier
+
+#Importando o modelo com o EncoderClassifier - método da biblioteca SpeechBrain
 model = EncoderClassifier.from_hparams(
+  #Modelo sendo carregado 
   "speechbrain/urbansound8k_ecapa"
 )
 
+#Função que aplica um filtro A-Weighting ao sinal de áudio
 def aplicar_a_weighting(sr, y):
-   
+
     # Frequências e constantes para A-Weighting
     f1, f2, f3, f4 = 20.598997, 107.65265, 737.86223, 12194.217
-
     A1000 = (f4**2) * (f3**2) / (((f1**2) + (1000**2)) * np.sqrt((f2**2) + (1000**2)) * ((f4**2) + (1000**2)))
 
     # Coeficientes do filtro
@@ -26,18 +28,19 @@ def aplicar_a_weighting(sr, y):
         )
     )
 
-    # Transformação bilinear para filtro digital
+    # Transformação bilinear para filtro digital - permitindo aplicar o filtro ao sinal
     b, a = bilinear(NUMs, DENs, sr)
     
     # Aplica o filtro ao sinal de áudio
     y_weighted = lfilter(b, a, y)
     
+    #Resultando no sinal filtrado com ponderação A - mais proximo da audição humana
     return y_weighted
+
 def extrair_informacoes_audio(caminho_arquivo):
     """
     Extrai informações de áudio, incluindo RMS, dB, e A-Weighting.
-    :param caminho_arquivo: Caminho para o arquivo de áudio
-    :return: Dicionário com informações extraídas
+    :param caminho_arquivo: Caminho para o arquivo de áudio - :return: Dicionário com informações extraídas
     """
     # Carregar o arquivo de áudio
     y, sr = librosa.load(caminho_arquivo)
@@ -68,12 +71,25 @@ def extrair_informacoes_audio(caminho_arquivo):
     }
 
 def classificar_audio(caminho_arquivo):
+    """
+    Classifica um arquivo de áudio e retorna a classe se a confiança
+    for de pelo menos 50%, caso contrário, retorna 'outros'.
+    """
     # Executa a inferência com o classificador
-    output = model.classify_file(caminho_arquivo)
+    output_probs, score, index, text_lab = model.classify_file(caminho_arquivo)
     
-    # Retorna a classe predita e a pontuação (opcional)
-    predicted_class = output[3]  # index 3 contém o nome da classe
-    score = output[2].item()     # index 2 contém o score de confiança (tensor)
+    # Converte o tensor de score para um número float
+    confianca = score.item()
     
-    return predicted_class[0]
+    # Verifica se a confiança é de pelo menos 60%
+    if confianca >= 0.6:
+
+        print("O áudio foi classificado como: " + text_lab[0])
+        # Retorna a classe predita (o primeiro item da lista de rótulos)
+        return text_lab[0]
+    else:
+
+        print("O áudio foi classificado como: outros")
+        # Retorna 'outros' se a confiança for insuficiente
+        return "outros"
 

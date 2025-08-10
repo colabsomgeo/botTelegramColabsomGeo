@@ -4,9 +4,10 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext, ConversationHandler
 from botTelegram.bot import handle_location, handle_audio, cancel, start, LOCATION, AUDIO
 
-TOKEN = ''
+TOKEN = '7621244735:AAEJ86WLh_xlXwaraNtBFanypEJVRV6wBgQ'
 
 
+#Aquiri o IP do servidor e Configurar no MongoDB Atlas
 def get_public_ip():
     try:
         # Consulta o IP público usando uma API pública
